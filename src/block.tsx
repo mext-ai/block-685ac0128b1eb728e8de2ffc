@@ -7,7 +7,7 @@ interface BlockProps {
 
 interface Bone {
   id: string;
-  name: string;
+  name: { fr: string; en: string };
   x: number;
   y: number;
   lineEndX: number;
@@ -16,30 +16,175 @@ interface Bone {
   userAnswer?: string;
 }
 
+type Language = 'fr' | 'en';
+
+const translations = {
+  fr: {
+    title: "Jeu de Reconnaissance des Os",
+    subtitle: "Glissez les étiquettes vers les os correspondants",
+    availableLabels: "Étiquettes disponibles",
+    placedAnswers: "Réponses placées",
+    checkAnswers: "Vérifier les réponses",
+    playAgain: "🔄 Rejouer",
+    score: "Score",
+    scoreMessages: {
+      excellent: "Excellent ! Vous maîtrisez parfaitement l'anatomie ! 🏆",
+      veryGood: "Très bien ! Vous avez de bonnes connaissances anatomiques ! 👏",
+      good: "Bien ! Continuez à étudier pour vous améliorer ! 📚",
+      average: "Passable. Il faut réviser un peu plus ! 💪",
+      poor: "Il faut étudier davantage l'anatomie ! Ne vous découragez pas ! 📖"
+    }
+  },
+  en: {
+    title: "Bone Recognition Game",
+    subtitle: "Drag the labels to the corresponding bones",
+    availableLabels: "Available Labels",
+    placedAnswers: "Placed Answers",
+    checkAnswers: "Check Answers",
+    playAgain: "🔄 Play Again",
+    score: "Score",
+    scoreMessages: {
+      excellent: "Excellent! You have perfect knowledge of anatomy! 🏆",
+      veryGood: "Very good! You have good anatomical knowledge! 👏",
+      good: "Good! Keep studying to improve! 📚",
+      average: "Fair. You need to review a bit more! 💪",
+      poor: "You need to study anatomy more! Don't give up! 📖"
+    }
+  }
+};
+
 const bones: Bone[] = [
-  { id: 'skull', name: 'Crâne', x: 80, y: 30, lineEndX: 165, lineEndY: 50 },
-  { id: 'clavicle', name: 'Clavicule', x: 50, y: 120, lineEndX: 150, lineEndY: 130 },
-  { id: 'sternum', name: 'Sternum', x: 280, y: 180, lineEndX: 205, lineEndY: 180 },
-  { id: 'ribs', name: 'Côtes', x: 320, y: 200, lineEndX: 250, lineEndY: 200 },
-  { id: 'humerus', name: 'Humérus', x: 60, y: 180, lineEndX: 140, lineEndY: 165 },
-  { id: 'radius', name: 'Radius', x: 40, y: 260, lineEndX: 125, lineEndY: 240 },
-  { id: 'ulna', name: 'Cubitus', x: 30, y: 300, lineEndX: 130, lineEndY: 265 },
-  { id: 'spine', name: 'Colonne vertébrale', x: 320, y: 280, lineEndX: 200, lineEndY: 250 },
-  { id: 'pelvis', name: 'Bassin', x: 300, y: 350, lineEndX: 200, lineEndY: 340 },
-  { id: 'femur', name: 'Fémur', x: 100, y: 420, lineEndX: 175, lineEndY: 420 },
-  { id: 'tibia', name: 'Tibia', x: 70, y: 500, lineEndX: 175, lineEndY: 510 },
-  { id: 'fibula', name: 'Péroné', x: 90, y: 560, lineEndX: 155, lineEndY: 545 }
+  { id: 'skull', name: { fr: 'Crâne', en: 'Skull' }, x: 80, y: 30, lineEndX: 165, lineEndY: 50 },
+  { id: 'clavicle', name: { fr: 'Clavicule', en: 'Clavicle' }, x: 50, y: 120, lineEndX: 150, lineEndY: 130 },
+  { id: 'sternum', name: { fr: 'Sternum', en: 'Sternum' }, x: 280, y: 180, lineEndX: 205, lineEndY: 180 },
+  { id: 'ribs', name: { fr: 'Côtes', en: 'Ribs' }, x: 320, y: 200, lineEndX: 250, lineEndY: 200 },
+  { id: 'humerus', name: { fr: 'Humérus', en: 'Humerus' }, x: 60, y: 180, lineEndX: 140, lineEndY: 165 },
+  { id: 'radius', name: { fr: 'Radius', en: 'Radius' }, x: 40, y: 260, lineEndX: 125, lineEndY: 240 },
+  { id: 'ulna', name: { fr: 'Cubitus', en: 'Ulna' }, x: 30, y: 300, lineEndX: 130, lineEndY: 265 },
+  { id: 'spine', name: { fr: 'Colonne vertébrale', en: 'Spine' }, x: 320, y: 280, lineEndX: 200, lineEndY: 250 },
+  { id: 'pelvis', name: { fr: 'Bassin', en: 'Pelvis' }, x: 300, y: 350, lineEndX: 200, lineEndY: 340 },
+  { id: 'femur', name: { fr: 'Fémur', en: 'Femur' }, x: 100, y: 420, lineEndX: 175, lineEndY: 420 },
+  { id: 'tibia', name: { fr: 'Tibia', en: 'Tibia' }, x: 70, y: 500, lineEndX: 175, lineEndY: 510 },
+  { id: 'fibula', name: { fr: 'Péroné', en: 'Fibula' }, x: 90, y: 560, lineEndX: 155, lineEndY: 545 }
 ];
 
-const Block: React.FC<BlockProps> = ({ title = "Jeu de Reconnaissance des Os", description }) => {
+// Composant de sélecteur de langue avec drapeaux
+const LanguageSelector: React.FC<{ language: Language; onLanguageChange: (lang: Language) => void }> = ({ 
+  language, 
+  onLanguageChange 
+}) => {
+  return (
+    <div style={{
+      position: 'absolute',
+      top: '20px',
+      right: '20px',
+      display: 'flex',
+      gap: '8px',
+      zIndex: 10
+    }}>
+      <button
+        onClick={() => onLanguageChange('fr')}
+        style={{
+          background: language === 'fr' 
+            ? 'linear-gradient(135deg, #0055A4 0%, #EF4135 50%, #FFFFFF 100%)' 
+            : 'transparent',
+          border: `3px solid ${language === 'fr' ? '#0055A4' : '#ddd'}`,
+          borderRadius: '50%',
+          width: '50px',
+          height: '50px',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '24px',
+          transition: 'all 0.3s ease',
+          boxShadow: language === 'fr' 
+            ? '0 4px 15px rgba(0,85,164,0.4)' 
+            : '0 2px 8px rgba(0,0,0,0.1)',
+          transform: language === 'fr' ? 'scale(1.1)' : 'scale(1)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+        title="Français"
+      >
+        <div style={{
+          width: '100%',
+          height: '100%',
+          background: 'linear-gradient(to right, #0055A4 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #EF4135 66.66%)',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '20px'
+        }}>
+          🇫🇷
+        </div>
+      </button>
+      
+      <button
+        onClick={() => onLanguageChange('en')}
+        style={{
+          background: language === 'en' 
+            ? 'linear-gradient(135deg, #012169 0%, #FFFFFF 50%, #C8102E 100%)' 
+            : 'transparent',
+          border: `3px solid ${language === 'en' ? '#012169' : '#ddd'}`,
+          borderRadius: '50%',
+          width: '50px',
+          height: '50px',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '24px',
+          transition: 'all 0.3s ease',
+          boxShadow: language === 'en' 
+            ? '0 4px 15px rgba(1,33,105,0.4)' 
+            : '0 2px 8px rgba(0,0,0,0.1)',
+          transform: language === 'en' ? 'scale(1.1)' : 'scale(1)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+        title="English"
+      >
+        <div style={{
+          width: '100%',
+          height: '100%',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '20px'
+        }}>
+          🇬🇧
+        </div>
+      </button>
+    </div>
+  );
+};
+
+const Block: React.FC<BlockProps> = ({ title, description }) => {
+  const [language, setLanguage] = useState<Language>('fr');
   const [gameState, setGameState] = useState<'playing' | 'finished'>('playing');
   const [userAnswers, setUserAnswers] = useState<{ [key: string]: string }>({});
   const [draggedLabel, setDraggedLabel] = useState<string | null>(null);
-  const [availableLabels, setAvailableLabels] = useState<string[]>(
-    bones.map(bone => bone.name).sort(() => Math.random() - 0.5)
-  );
+  const [availableLabels, setAvailableLabels] = useState<string[]>([]);
   const [score, setScore] = useState<number>(0);
   const [results, setResults] = useState<{ [key: string]: boolean }>({});
+
+  // Initialiser les étiquettes dans la langue sélectionnée
+  useEffect(() => {
+    const labels = bones.map(bone => bone.name[language]).sort(() => Math.random() - 0.5);
+    setAvailableLabels(labels);
+    // Réinitialiser le jeu quand on change de langue
+    setUserAnswers({});
+    setGameState('playing');
+    setScore(0);
+    setResults({});
+  }, [language]);
+
+  // Récupérer les traductions pour la langue actuelle
+  const t = translations[language];
+  const currentTitle = title || t.title;
 
   // Envoi de l'événement de completion
   useEffect(() => {
@@ -49,17 +194,19 @@ const Block: React.FC<BlockProps> = ({ title = "Jeu de Reconnaissance des Os", d
         blockId: 'bone-recognition-game', 
         completed: true,
         score: score,
-        maxScore: 100
+        maxScore: 100,
+        language: language
       }, '*');
       window.parent?.postMessage({ 
         type: 'BLOCK_COMPLETION', 
         blockId: 'bone-recognition-game', 
         completed: true,
         score: score,
-        maxScore: 100
+        maxScore: 100,
+        language: language
       }, '*');
     }
-  }, [gameState, score]);
+  }, [gameState, score, language]);
 
   const handleDragStart = (e: React.DragEvent, label: string) => {
     setDraggedLabel(label);
@@ -101,7 +248,8 @@ const Block: React.FC<BlockProps> = ({ title = "Jeu de Reconnaissance des Os", d
 
     bones.forEach(bone => {
       const userAnswer = userAnswers[bone.id];
-      const isCorrect = userAnswer === bone.name;
+      const correctAnswer = bone.name[language];
+      const isCorrect = userAnswer === correctAnswer;
       newResults[bone.id] = isCorrect;
       if (isCorrect) correctCount++;
     });
@@ -115,17 +263,17 @@ const Block: React.FC<BlockProps> = ({ title = "Jeu de Reconnaissance des Os", d
   const resetGame = () => {
     setGameState('playing');
     setUserAnswers({});
-    setAvailableLabels(bones.map(bone => bone.name).sort(() => Math.random() - 0.5));
+    setAvailableLabels(bones.map(bone => bone.name[language]).sort(() => Math.random() - 0.5));
     setScore(0);
     setResults({});
   };
 
   const getScoreMessage = (score: number) => {
-    if (score >= 90) return "Excellent ! Vous maîtrisez parfaitement l'anatomie ! 🏆";
-    if (score >= 75) return "Très bien ! Vous avez de bonnes connaissances anatomiques ! 👏";
-    if (score >= 60) return "Bien ! Continuez à étudier pour vous améliorer ! 📚";
-    if (score >= 40) return "Passable. Il faut réviser un peu plus ! 💪";
-    return "Il faut étudier davantage l'anatomie ! Ne vous découragez pas ! 📖";
+    if (score >= 90) return t.scoreMessages.excellent;
+    if (score >= 75) return t.scoreMessages.veryGood;
+    if (score >= 60) return t.scoreMessages.good;
+    if (score >= 40) return t.scoreMessages.average;
+    return t.scoreMessages.poor;
   };
 
   // Composant SVG du squelette simplifié mais reconnaissable
@@ -215,16 +363,20 @@ const Block: React.FC<BlockProps> = ({ title = "Jeu de Reconnaissance des Os", d
       fontFamily: 'Arial, sans-serif',
       padding: '20px',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
+      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+      position: 'relative'
     }}>
+      {/* Sélecteur de langue */}
+      <LanguageSelector language={language} onLanguageChange={setLanguage} />
+
       <div style={{
         textAlign: 'center',
         marginBottom: '20px',
         color: '#2c3e50'
       }}>
-        <h1 style={{ margin: '0 0 10px 0', fontSize: '2rem' }}>{title}</h1>
+        <h1 style={{ margin: '0 0 10px 0', fontSize: '2rem' }}>{currentTitle}</h1>
         <p style={{ margin: '0', fontSize: '1.1rem', opacity: 0.8 }}>
-          Glissez les étiquettes vers les os correspondants
+          {t.subtitle}
         </p>
       </div>
 
@@ -360,7 +512,7 @@ const Block: React.FC<BlockProps> = ({ title = "Jeu de Reconnaissance des Os", d
             padding: '20px',
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
           }}>
-            <h3 style={{ margin: '0 0 15px 0', color: '#2c3e50' }}>Étiquettes disponibles</h3>
+            <h3 style={{ margin: '0 0 15px 0', color: '#2c3e50' }}>{t.availableLabels}</h3>
             <div style={{
               display: 'flex',
               flexWrap: 'wrap',
@@ -400,7 +552,9 @@ const Block: React.FC<BlockProps> = ({ title = "Jeu de Reconnaissance des Os", d
             padding: '20px',
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
           }}>
-            <h3 style={{ margin: '0 0 15px 0', color: '#2c3e50' }}>Réponses placées ({Object.keys(userAnswers).length}/{bones.length})</h3>
+            <h3 style={{ margin: '0 0 15px 0', color: '#2c3e50' }}>
+              {t.placedAnswers} ({Object.keys(userAnswers).length}/{bones.length})
+            </h3>
             <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
               {Object.entries(userAnswers).map(([boneId, answer]) => {
                 const bone = bones.find(b => b.id === boneId);
@@ -488,7 +642,7 @@ const Block: React.FC<BlockProps> = ({ title = "Jeu de Reconnaissance des Os", d
                   fontWeight: 'bold'
                 }}
               >
-                Vérifier les réponses
+                {t.checkAnswers}
               </button>
             ) : (
               <div>
@@ -499,7 +653,7 @@ const Block: React.FC<BlockProps> = ({ title = "Jeu de Reconnaissance des Os", d
                   margin: '0 0 10px 0',
                   textShadow: '0 2px 4px rgba(0,0,0,0.1)'
                 }}>
-                  Score: {score}%
+                  {t.score}: {score}%
                 </div>
                 <p style={{
                   margin: '0 0 20px 0',
@@ -524,7 +678,7 @@ const Block: React.FC<BlockProps> = ({ title = "Jeu de Reconnaissance des Os", d
                     fontWeight: 'bold'
                   }}
                 >
-                  🔄 Rejouer
+                  {t.playAgain}
                 </button>
               </div>
             )}
