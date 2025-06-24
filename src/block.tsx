@@ -68,7 +68,7 @@ const bones: Bone[] = [
   { id: 'fibula', name: { fr: 'Péroné', en: 'Fibula' }, x: 90, y: 560, lineEndX: 155, lineEndY: 545 }
 ];
 
-// Composant de sélecteur de langue avec drapeaux
+// Composant de sélecteur de langue avec drapeaux améliorés
 const LanguageSelector: React.FC<{ language: Language; onLanguageChange: (lang: Language) => void }> = ({ 
   language, 
   onLanguageChange 
@@ -82,12 +82,10 @@ const LanguageSelector: React.FC<{ language: Language; onLanguageChange: (lang: 
       gap: '8px',
       zIndex: 10
     }}>
+      {/* Bouton Français */}
       <button
         onClick={() => onLanguageChange('fr')}
         style={{
-          background: language === 'fr' 
-            ? 'linear-gradient(135deg, #0055A4 0%, #EF4135 50%, #FFFFFF 100%)' 
-            : 'transparent',
           border: `3px solid ${language === 'fr' ? '#0055A4' : '#ddd'}`,
           borderRadius: '50%',
           width: '50px',
@@ -96,37 +94,38 @@ const LanguageSelector: React.FC<{ language: Language; onLanguageChange: (lang: 
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '24px',
+          fontSize: '16px',
+          fontWeight: 'bold',
           transition: 'all 0.3s ease',
           boxShadow: language === 'fr' 
             ? '0 4px 15px rgba(0,85,164,0.4)' 
             : '0 2px 8px rgba(0,0,0,0.1)',
           transform: language === 'fr' ? 'scale(1.1)' : 'scale(1)',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          background: 'linear-gradient(to right, #0055A4 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #EF4135 66.66%)',
+          color: '#fff'
         }}
         title="Français"
       >
-        <div style={{
-          width: '100%',
-          height: '100%',
-          background: 'linear-gradient(to right, #0055A4 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #EF4135 66.66%)',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '20px'
+        <span style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          color: '#2c3e50',
+          fontWeight: 'bold',
+          fontSize: '12px',
+          textShadow: '1px 1px 2px rgba(255,255,255,0.8)'
         }}>
-          🇫🇷
-        </div>
+          FR
+        </span>
       </button>
       
+      {/* Bouton Anglais amélioré */}
       <button
         onClick={() => onLanguageChange('en')}
         style={{
-          background: language === 'en' 
-            ? 'linear-gradient(135deg, #012169 0%, #FFFFFF 50%, #C8102E 100%)' 
-            : 'transparent',
           border: `3px solid ${language === 'en' ? '#012169' : '#ddd'}`,
           borderRadius: '50%',
           width: '50px',
@@ -135,28 +134,66 @@ const LanguageSelector: React.FC<{ language: Language; onLanguageChange: (lang: 
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '24px',
+          fontSize: '16px',
+          fontWeight: 'bold',
           transition: 'all 0.3s ease',
           boxShadow: language === 'en' 
             ? '0 4px 15px rgba(1,33,105,0.4)' 
             : '0 2px 8px rgba(0,0,0,0.1)',
           transform: language === 'en' ? 'scale(1.1)' : 'scale(1)',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          background: '#012169'
         }}
         title="English"
       >
-        <div style={{
-          width: '100%',
-          height: '100%',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '20px'
+        {/* Fond du drapeau britannique */}
+        <svg
+          width="50"
+          height="50"
+          viewBox="0 0 50 50"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            borderRadius: '50%'
+          }}
+        >
+          {/* Fond bleu */}
+          <circle cx="25" cy="25" r="25" fill="#012169"/>
+          
+          {/* Croix de Saint-André (diagonales blanches) */}
+          <path d="M0,0 L50,50 M50,0 L0,50" 
+                stroke="#FFFFFF" 
+                strokeWidth="4"/>
+          
+          {/* Croix de Saint-André (diagonales rouges plus fines) */}
+          <path d="M0,0 L50,50 M50,0 L0,50" 
+                stroke="#C8102E" 
+                strokeWidth="2"/>
+          
+          {/* Croix de Saint-Georges (horizontale et verticale blanches) */}
+          <path d="M25,0 L25,50 M0,25 L50,25" 
+                stroke="#FFFFFF" 
+                strokeWidth="8"/>
+          
+          {/* Croix de Saint-Georges (horizontale et verticale rouges) */}
+          <path d="M25,0 L25,50 M0,25 L50,25" 
+                stroke="#C8102E" 
+                strokeWidth="5"/>
+        </svg>
+        
+        {/* Texte EN par-dessus */}
+        <span style={{
+          position: 'relative',
+          zIndex: 1,
+          color: '#fff',
+          fontWeight: 'bold',
+          fontSize: '12px',
+          textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
         }}>
-          🇬🇧
-        </div>
+          EN
+        </span>
       </button>
     </div>
   );
